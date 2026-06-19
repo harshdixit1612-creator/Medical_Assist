@@ -1,41 +1,74 @@
-"use client";
+'use client';
+
+import { MessageSquare, Phone, Plus } from 'lucide-react';
+import Link from 'next/link';
 
 export default function SOSPage() {
   return (
-    <main className="min-h-screen bg-red-50 flex flex-col items-center justify-center p-4">
-      {/* 
-        USER: Drop your Figma/Stitch SOS UI here!
-        This page should be entirely focused on immediate contact.
-      */}
+    <main className="min-h-screen bg-[#F4F5F7] flex flex-col items-center justify-center p-4 relative pb-20">
       
-      <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl text-center space-y-6 border border-red-100">
-        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-        </div>
-        
-        <h1 className="text-3xl font-black text-gray-900">Need Medical Help?</h1>
-        <p className="text-gray-600">You are not alone. Our English-speaking concierge will connect you with a verified doctor right now.</p>
-        
-        <div className="pt-4 space-y-4">
-          <a 
-            href="https://wa.me/91XXXXXXXXXX?text=SOS%20Medical%20Assist:%20I%20need%20urgent%20help."
-            className="block w-full bg-[#25D366] hover:bg-[#20b858] text-white font-bold py-4 px-4 rounded-xl shadow-lg transition-transform active:scale-95"
-          >
-            WhatsApp Now
-          </a>
-          
-          <a 
-            href="tel:+91XXXXXXXXXX"
-            className="block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-4 rounded-xl shadow-lg transition-transform active:scale-95"
-          >
-            Call Us
-          </a>
-        </div>
-        
-        <p className="text-xs text-gray-400 mt-6">
-          For absolute life-threatening emergencies, please dial the local emergency number (112 in India).
+      {/* Central Icon */}
+      <div className="w-24 h-24 bg-brand-navy rounded-full flex items-center justify-center mb-8 shadow-lg">
+        <Plus className="w-12 h-12 text-blue-300 stroke-[3]" />
+      </div>
+
+      <div className="text-center max-w-lg mb-10">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-brand-navy tracking-tight mb-4">
+          You are not alone.
+        </h1>
+        <p className="text-gray-500 text-lg">
+          Our English and Hindi speaking concierge is standing by to assist you with any medical situation.
         </p>
       </div>
+
+      {/* Action Cards Container */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+        
+        {/* WhatsApp Card */}
+        <a 
+          href="https://wa.me/91XXXXXXXXXX?text=SOS%20Medical%20Assist:%20I%20need%20help."
+          target="_blank" 
+          rel="noreferrer"
+          className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col justify-between min-h-[220px] active:scale-[0.98]"
+        >
+          <div className="w-14 h-14 bg-brand-green rounded-xl flex items-center justify-center mb-10">
+            <MessageSquare className="w-7 h-7 text-white fill-white" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Message Now</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">WhatsApp Concierge</h2>
+            <p className="text-gray-500 text-sm">Instant chat support for non-emergency coordination and guidance.</p>
+          </div>
+        </a>
+
+        {/* Voice Call Card */}
+        <a 
+          href="tel:+91XXXXXXXXXX"
+          className="bg-brand-navy rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow flex flex-col justify-between min-h-[220px] active:scale-[0.98] overflow-hidden relative"
+        >
+          {/* Subtle background circle decoration from design */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-[0.03] rounded-full -translate-y-1/4 translate-x-1/4"></div>
+
+          <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center mb-10 relative z-10">
+            <Phone className="w-7 h-7 text-brand-navy fill-brand-navy" />
+          </div>
+          <div className="relative z-10">
+            <p className="text-xs font-bold text-blue-200 uppercase tracking-wider mb-2">Voice Call</p>
+            <h2 className="text-2xl font-bold text-white mb-2">Call Emergency Helpline</h2>
+            <p className="text-blue-100 text-sm">Immediate verbal triage with a qualified medical coordinator.</p>
+          </div>
+        </a>
+
+      </div>
+
+      {/* Warning Footer */}
+      <div className="absolute bottom-0 left-0 w-full bg-gray-100/80 border-t border-gray-200 p-4 text-center">
+        <p className="text-sm text-gray-600 font-medium flex items-center justify-center">
+          <span className="text-brand-red mr-2 text-lg">⚠️</span> 
+          For life-threatening emergencies, dial <span className="text-brand-red font-bold mx-1">112</span> immediately.
+        </p>
+      </div>
+
     </main>
   );
 }

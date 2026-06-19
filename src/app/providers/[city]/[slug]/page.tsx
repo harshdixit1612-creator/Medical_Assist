@@ -2,11 +2,10 @@ import { getProviderBySlug } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: { slug: string; city: string } 
+export async function generateMetadata(props: { 
+  params: Promise<{ slug: string; city: string }> 
 }): Promise<Metadata> {
+  const params = await props.params;
   const provider = await getProviderBySlug(params.slug);
   
   if (!provider) return { title: 'Provider Not Found' };
@@ -17,11 +16,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProviderProfilePage({
-  params,
-}: {
-  params: { slug: string; city: string };
+export default async function ProviderProfilePage(props: {
+  params: Promise<{ slug: string; city: string }>;
 }) {
+  const params = await props.params;
   const provider = await getProviderBySlug(params.slug);
 
   if (!provider) {
