@@ -2,6 +2,7 @@
 
 import { MessageSquare, Phone, Plus } from 'lucide-react';
 import Link from 'next/link';
+import TriageForm from '@/components/TriageForm';
 
 export default function SOSPage() {
   return (
@@ -59,6 +60,11 @@ export default function SOSPage() {
           </div>
         </a>
 
+      </div>
+
+      {/* Triage Form Section */}
+      <div className="w-full max-w-4xl mt-6 z-10">
+        <TriageForm />
       </div>
 
       {/* Warning Footer */}

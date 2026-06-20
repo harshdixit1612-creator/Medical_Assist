@@ -32,10 +32,6 @@ export async function getProviders(filters?: {
     query = query.ilike('city', `%${filters.city}%`);
   }
   
-  if (filters?.specialty) {
-    query = query.contains('specialties', [filters.specialty]);
-  }
-
   if (filters?.language) {
     query = query.contains('languages_spoken', [filters.language]);
   }
@@ -51,7 +47,21 @@ export async function getProviders(filters?: {
     return [];
   }
   
-  return data as Provider[];
+  let results = data as Provider[];
+
+  // Perform flexible local filtering for specialty (e.g., "Cardiologist" matches "Cardiology")
+  if (filters?.specialty) {
+    const searchLower = filters.specialty.toLowerCase();
+    // basic stemming: remove "ist" or "ology" for wider match if needed, but just checking substring is usually enough
+    // e.g., "cardio" in "cardiologist"
+    const searchBase = searchLower.replace(/(ist|ology|y)$/i, '');
+    
+    results = results.filter(provider => 
+      provider.specialties.some(spec => spec.toLowerCase().includes(searchBase))
+    );
+  }
+
+  return results;
 }
 
 // 2. Fetch a single provider for the SEO page (/providers/[city]/[slug])
@@ -76,7 +86,7 @@ export async function submitTriageCase(
   lat?: number, 
   lng?: number
 ) {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('triage_cases')
     .insert([
       { 
@@ -85,16 +95,14 @@ export async function submitTriageCase(
         location_lng: lng,
         status: 'open'
       }
-    ])
-    .select()
-    .single();
+    ]);
 
   if (error) {
     console.error('Error submitting triage case:', error);
     return null;
   }
 
-  return data;
+  return true;
 }
 
 // 4. Fetch Price Benchmarks for a city

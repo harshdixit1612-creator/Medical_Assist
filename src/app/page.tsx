@@ -2,16 +2,27 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getProviders, Provider } from '@/lib/api';
 import { Star, ShieldCheck, Banknote, MapPin, Search, ChevronRight, Activity, CircleAlert } from 'lucide-react';
+import MapComponent from '@/components/DynamicMap';
 
 export default function HomePage() {
   const router = useRouter();
   const [city, setCity] = useState('');
+  const [specialty, setSpecialty] = useState('');
+  const [providers, setProviders] = useState<Provider[]>([]);
+
+  useEffect(() => {
+    getProviders().then(setProviders);
+  }, []);
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/providers?city=${encodeURIComponent(city)}`);
+    let url = `/providers?`;
+    if (city) url += `city=${encodeURIComponent(city)}&`;
+    if (specialty) url += `specialty=${encodeURIComponent(specialty)}&`;
+    router.push(url.replace(/&$/, '') || '/providers');
   };
 
   return (
@@ -55,6 +66,8 @@ export default function HomePage() {
                 <Search className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" />
                 <input 
                   type="text" 
+                  value={specialty}
+                  onChange={(e) => setSpecialty(e.target.value)}
                   placeholder="Specialty (e.g. Cardiologist, GP)"
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-navy focus:border-brand-navy outline-none"
                 />
@@ -72,7 +85,10 @@ export default function HomePage() {
                     >
                       <option value="">Select City</option>
                       <option value="Ranchi">Ranchi</option>
-                      <option value="New Delhi">New Delhi, DL</option>
+                      <option value="New Delhi">New Delhi</option>
+                      <option value="Goa">Goa</option>
+                      <option value="Mumbai">Mumbai</option>
+                      <option value="Bangalore">Bangalore</option>
                     </select>
                   </div>
                 </div>
@@ -136,26 +152,13 @@ export default function HomePage() {
 
         {/* Bottom Section: Map & Hubs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Map Placeholder */}
-          <div className="lg:col-span-2 bg-[#4fb4cb] rounded-3xl h-[400px] relative overflow-hidden shadow-sm">
-            {/* Minimalist fake map grid lines */}
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-brand-navy shadow-sm flex items-center">
-              <span className="w-2 h-2 bg-brand-navy rounded-full mr-2"></span>
-              8 Specialists near you
+          {/* Interactive Map */}
+          <div className="lg:col-span-2 bg-[#4fb4cb] rounded-3xl h-[400px] relative overflow-hidden shadow-sm z-0">
+            <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-bold text-brand-navy shadow-sm flex items-center z-10">
+              <span className="w-2 h-2 bg-brand-green rounded-full mr-2"></span>
+              {providers.length} Specialists near you
             </div>
-            
-            {/* Fake Pins */}
-            {[
-              { top: '20%', left: '30%' }, { top: '40%', left: '50%' }, { top: '60%', left: '20%' },
-              { top: '70%', left: '60%' }, { top: '30%', left: '70%' }, { top: '80%', left: '80%' }
-            ].map((pos, i) => (
-              <div key={i} className="absolute w-8 h-8 -ml-4 -mt-8" style={pos}>
-                <svg viewBox="0 0 24 24" fill="currentColor" className="text-brand-navy drop-shadow-md">
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-              </div>
-            ))}
+            <MapComponent providers={providers} />
           </div>
 
           {/* Hubs List */}
